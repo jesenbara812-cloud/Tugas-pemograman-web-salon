@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joy Salon - Manajemen Reservasi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#351c3c',
+                            light: '#482752',
+                            accent: '#642f6f',
+                            purple: '#4c1d95'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex min-h-screen text-gray-800">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-brand-dark text-white flex flex-col flex-shrink-0 shadow-lg min-h-screen">
+        <!-- Logo Header -->
+        <div class="p-6 border-b border-brand-light/30">
+            <h1 class="text-2xl font-bold tracking-wide">Joy Salon</h1>
+            <p class="text-xs text-purple-300 mt-1">Admin Dashboard</p>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="flex-1 px-4 py-6 space-y-1.5 text-sm">
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 text-purple-200 hover:bg-brand-light rounded-xl transition">
+                <i class="fa-solid fa-house w-5 text-center"></i>
+                <span>Beranda</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 bg-brand-light text-white font-medium rounded-xl shadow-inner">
+                <i class="fa-regular fa-calendar-check w-5 text-center"></i>
+                <span>Reservasi</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 text-purple-200 hover:bg-brand-light rounded-xl transition">
+                <i class="fa-solid fa-receipt w-5 text-center"></i>
+                <span>Transaksi</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 text-purple-200 hover:bg-brand-light rounded-xl transition">
+                <i class="fa-solid fa-scissors w-5 text-center"></i>
+                <span>Treatment</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 text-purple-200 hover:bg-brand-light rounded-xl transition">
+                <i class="fa-solid fa-users w-5 text-center"></i>
+                <span>Pelanggan</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 text-purple-200 hover:bg-brand-light rounded-xl transition">
+                <i class="fa-solid fa-user-gear w-5 text-center"></i>
+                <span>Karyawan</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 text-purple-200 hover:bg-brand-light rounded-xl transition">
+                <i class="fa-solid fa-user-shield w-5 text-center"></i>
+                <span>Pengguna</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 text-purple-200 hover:bg-brand-light rounded-xl transition">
+                <i class="fa-solid fa-chart-line w-5 text-center"></i>
+                <span>Laporan</span>
+            </a>
+        </nav>
+
+        <!-- Logout Button -->
+        <div class="p-4 border-t border-brand-light/30">
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 text-purple-200 hover:bg-red-500/20 hover:text-red-200 rounded-xl transition">
+                <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i>
+                <span>Keluar</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-8 overflow-y-auto">
+        <!-- Header & Action Row -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Reservasi</h2>
+                <p class="text-xs text-gray-500 mt-1" id="subHeaderDate">Jumat, 18 September 2026 • <span id="totalSchedule">14 jadwal</span></p>
+            </div>
+            <button onclick="openAddModal()" class="bg-brand-dark hover:bg-brand-accent text-white px-5 py-2.5 rounded-xl font-medium text-sm transition shadow-md flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>Tambah reservasi</span>
+            </button>
+        </div>
+
+        <!-- Filters & Search Bar -->
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-6 flex flex-col md:flex-row gap-3 items-center">
+            <div class="relative flex-1 w-full">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Cari nama pelanggan atau nomor HP..." class="w-full pl-10 pr-4 py-2.5 bg-gray-50 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark transition">
+            </div>
+            <div class="flex gap-3 w-full md:w-auto">
+                <input type="date" id="dateFilter" onchange="applyFilters()" value="2026-09-18" class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-brand-dark focus:border-brand-dark px-3 py-2.5 outline-none">
+                <select id="statusFilter" onchange="applyFilters()" class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-brand-dark focus:border-brand-dark px-3 py-2.5 outline-none">
+                    <option value="Semua">Semua status</option>
+                    <option value="Menunggu">Menunggu</option>
+                    <option value="Dikonfirmasi">Dikonfirmasi</option>
+                    <option value="Selesai">Selesai</option>
+                    <option value="Ditolak">Ditolak</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-100 text-xs font-semibold text-gray-400 uppercase tracking-wider bg-gray-50/50">
+                            <th class="py-4 px-6">Kode</th>
+                            <th class="py-4 px-6">Pelanggan</th>
+                            <th class="py-4 px-6">Treatment</th>
+                            <th class="py-4 px-6">Jam</th>
+                            <th class="py-4 px-6">Karyawan</th>
+                            <th class="py-4 px-6 text-center">Status</th>
+                            <th class="py-4 px-6 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationTableBody" class="divide-y divide-gray-100 text-sm text-gray-600">
+                        <!-- Data rows rendered by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Form (Tambah / Edit Reservasi) -->
+    <div id="modalForm" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative">
+            <h3 id="modalTitle" class="text-lg font-bold text-gray-800 mb-4">Tambah Reservasi Baru</h3>
+            <form id="reservationForm" onsubmit="saveReservation(event)">
+                <input type="hidden" id="editId">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Nama Pelanggan</label>
+                        <input type="text" id="inputPelanggan" required class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Nomor HP</label>
+                        <input type="tel" id="inputPhone" required placeholder="08xxxxxxxxxx" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Treatment</label>
+                        <input type="text" id="inputTreatment" required placeholder="Contoh: Smoothing" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Jam</label>
+                            <input type="text" id="inputJam" required placeholder="15.00" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Karyawan</label>
+                            <input type="text" id="inputKaryawan" placeholder="Contoh: Rina" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20">
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-100 text-gray-600 rounded-xl text-sm hover:bg-gray-200 transition">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-brand-dark text-white rounded-xl text-sm hover:bg-brand-accent transition">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Detail (Lihat) -->
+    <div id="modalDetail" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl text-center">
+            <div class="w-12 h-12 bg-purple-100 text-brand-dark rounded-full flex items-center justify-center mx-auto mb-3">
+                <i class="fa-solid fa-circle-info text-xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Detail Reservasi</h3>
+            <div id="detailContent" class="text-left text-xs space-y-2 bg-gray-50 p-4 rounded-xl border border-gray-100 mb-4">
+                <!-- Content inserted dynamically -->
+            </div>
+            <button onclick="closeDetailModal()" class="w-full py-2 bg-brand-dark text-white rounded-xl text-sm hover:bg-brand-accent transition">Tutup</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Initial Dummy Data matching the layout image
+        let reservations = [
+            { id: "RS-1043", pelanggan: "Brigita", phone: "08123456789", treatment: "Smoothing", jam: "15.00", karyawan: "Rina", status: "Menunggu" },
+            { id: "RS-1042", pelanggan: "mahesa", phone: "08234567890", treatment: "Potong pria", jam: "13.00", karyawan: "Bagas", status: "Dikonfirmasi" },
+            { id: "RS-1041", pelanggan: "Jesika", phone: "08345678901", treatment: "Creambath + potong", jam: "11.30", karyawan: "Tika", status: "Selesai" },
+            { id: "RS-1040", pelanggan: "Nafa", phone: "08456789012", treatment: "Hair spa", jam: "10.00", karyawan: "Rina", status: "Selesai" },
+            { id: "RS-1039", pelanggan: "Putri", phone: "08567890123", treatment: "Facial dasar", jam: "16.30", karyawan: "—", status: "Ditolak" }
+        ];
+
+        // Render function for status badges
+        function getStatusBadge(status) {
+            switch(status) {
+                case 'Menunggu':
+                    return `<span class="px-3 py-1 text-xs rounded-full border border-amber-300 bg-amber-50 text-amber-700 font-medium">Menunggu</span>`;
+                case 'Dikonfirmasi':
+                    return `<span class="px-3 py-1 text-xs rounded-full border border-orange-200 bg-orange-50 text-orange-600 font-medium">Dikonfirmasi</span>`;
+                case 'Selesai':
+                    return `<span class="px-3 py-1 text-xs rounded-full border border-emerald-200 bg-emerald-50 text-emerald-600 font-medium">Selesai</span>`;
+                case 'Ditolak':
+                    return `<span class="px-3 py-1 text-xs rounded-full border border-rose-200 bg-rose-50 text-rose-500 font-medium">Ditolak</span>`;
+                default:
+                    return '';
+            }
+        }
+
+        // Render Action Buttons based on status requirements
+        function getActionButtons(item) {
+            if (item.status === 'Menunggu') {
+                return `
+                    <button onclick="updateStatus('${item.id}', 'Dikonfirmasi')" class="text-xs font-medium text-gray-700 hover:text-green-600 transition">Konfirmasi</button>
+                    <span class="text-gray-300 mx-1">•</span>
+                    <button onclick="updateStatus('${item.id}', 'Ditolak')" class="text-xs font-medium text-gray-700 hover:text-red-600 transition">Tolak</button>
+                `;
+            } else if (item.status === 'Dikonfirmasi') {
+                return `
+                    <button onclick="openEditModal('${item.id}')" class="text-xs font-medium text-gray-700 hover:text-blue-600 transition">Ubah</button>
+                    <span class="text-gray-300 mx-1">•</span>
+                    <button onclick="updateStatus('${item.id}', 'Selesai')" class="text-xs font-medium text-gray-700 hover:text-green-600 transition">Selesai</button>
+                `;
+            } else {
+                // Selesai or Ditolak status
+                return `
+                    <button onclick="viewDetail('${item.id}')" class="text-xs font-medium text-gray-700 hover:text-purple-600 transition">Lihat</button>
+                `;
+            }
+        }
+
+        // Render Table Data
+        function renderTable(dataToRender = reservations) {
+            const tbody = document.getElementById('reservationTableBody');
+            tbody.innerHTML = '';
+
+            if (dataToRender.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-gray-400">Tidak ada data reservasi ditemukan.</td></tr>`;
+                return;
+            }
+
+            dataToRender.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50/80 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-4 px-6 font-medium text-gray-700">${item.id}</td>
+                    <td class="py-4 px-6 font-medium text-gray-800">${item.pelanggan}</td>
+                    <td class="py-4 px-6 text-gray-600">${item.treatment}</td>
+                    <td class="py-4 px-6 text-gray-600">${item.jam}</td>
+                    <td class="py-4 px-6 text-gray-600">${item.karyawan}</td>
+                    <td class="py-4 px-6 text-center">${getStatusBadge(item.status)}</td>
+                    <td class="py-4 px-6 text-center">${getActionButtons(item)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('totalSchedule').innerText = `${dataToRender.length} jadwal`;
+        }
+
+        // Filter and Search Logic
+        function applyFilters() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const statusValue = document.getElementById('statusFilter').value;
+
+            const filtered = reservations.filter(item => {
+                const matchesSearch = item.pelanggan.toLowerCase().includes(searchValue) || 
+                                      item.phone.includes(searchValue);
+                const matchesStatus = statusValue === 'Semua' || item.status === statusValue;
+                return matchesSearch && matchesStatus;
+            });
+
+            renderTable(filtered);
+        }
+
+        // Status Update Logic
+        function updateStatus(id, newStatus) {
+            const res = reservations.find(r => r.id === id);
+            if (res) {
+                res.status = newStatus;
+                applyFilters();
+            }
+        }
+
+        // Modal Controls
+        function openAddModal() {
+            document.getElementById('modalTitle').innerText = 'Tambah Reservasi Baru';
+            document.getElementById('reservationForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('modalForm').classList.remove('hidden');
+        }
+
+        function openEditModal(id) {
+            const item = reservations.find(r => r.id === id);
+            if (!item) return;
+
+            document.getElementById('modalTitle').innerText = 'Ubah Reservasi';
+            document.getElementById('editId').value = item.id;
+            document.getElementById('inputPelanggan').value = item.pelanggan;
+            document.getElementById('inputPhone').value = item.phone || '';
+            document.getElementById('inputTreatment').value = item.treatment;
+            document.getElementById('inputJam').value = item.jam;
+            document.getElementById('inputKaryawan').value = item.karyawan === '—' ? '' : item.karyawan;
+
+            document.getElementById('modalForm').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modalForm').classList.add('hidden');
+        }
+
+        // Save (Add or Update)
+        function saveReservation(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editId').value;
+            const pelanggan = document.getElementById('inputPelanggan').value;
+            const phone = document.getElementById('inputPhone').value;
+            const treatment = document.getElementById('inputTreatment').value;
+            const jam = document.getElementById('inputJam').value;
+            const karyawan = document.getElementById('inputKaryawan').value || '—';
+
+            if (editId) {
+                // Update
+                const item = reservations.find(r => r.id === editId);
+                if (item) {
+                    item.pelanggan = pelanggan;
+                    item.phone = phone;
+                    item.treatment = treatment;
+                    item.jam = jam;
+                    item.karyawan = karyawan;
+                }
+            } else {
+                // Add New
+                const newCode = `RS-${1044 + reservations.length}`;
+                reservations.unshift({
+                    id: newCode,
+                    pelanggan,
+                    phone,
+                    treatment,
+                    jam,
+                    karyawan,
+                    status: 'Menunggu'
+                });
+            }
+
+            closeModal();
+            applyFilters();
+        }
+
+        // View Detail Modal
+        function viewDetail(id) {
+            const item = reservations.find(r => r.id === id);
+            if (!item) return;
+
+            const detailDiv = document.getElementById('detailContent');
+            detailDiv.innerHTML = `
+                <p><strong class="text-gray-700">Kode:</strong> ${item.id}</p>
+                <p><strong class="text-gray-700">Pelanggan:</strong> ${item.pelanggan}</p>
+                <p><strong class="text-gray-700">No HP:</strong> ${item.phone || '-'}</p>
+                <p><strong class="text-gray-700">Treatment:</strong> ${item.treatment}</p>
+                <p><strong class="text-gray-700">Jam:</strong> ${item.jam}</p>
+                <p><strong class="text-gray-700">Karyawan:</strong> ${item.karyawan}</p>
+                <p><strong class="text-gray-700">Status:</strong> ${item.status}</p>
+            `;
+            document.getElementById('modalDetail').classList.remove('hidden');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('modalDetail').classList.add('hidden');
+        }
+
+        // Initialize Render
+        renderTable();
+    </script>
+</body>
+</html>
